@@ -4,6 +4,19 @@ This repo provides very simple program in rust which biulds to Tier 2 rust compi
 
 ## Build
 
+Rust compiler:
+
+```
+name: stable-aarch64-apple-darwin
+active because: it's the default toolchain
+installed targets:
+  aarch64-apple-darwin
+  riscv32im-unknown-none-elf
+  riscv64gc-unknown-linux-gnu
+  
+cargo 1.88.0 (873a06493 2025-05-10)
+```
+
 Regular build:
 
 `cargo build --release`
