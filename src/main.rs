@@ -1,39 +1,73 @@
 #![no_std]
 #![no_main]
 use core::sync::atomic::Ordering;
-use portable_atomic::AtomicU16;
-use portable_atomic_util::Arc;
+use core::sync::atomic::AtomicU16;
+
+core::arch::global_asm!(
+    r#"
+.section .text._start;
+.globl _start;
+_start:
+    .option push;
+    .option norelax;
+    la gp, __global_pointer$;
+    .option pop;
+    la sp, {0}
+    lw sp, 0(sp)
+    call __start;
+"#,
+    sym STACK_TOP
+);
 
 #[panic_handler]
 fn panic_impl(_panic_info: &core::panic::PanicInfo) -> ! {
-     loop {}
+    unsafe {  core::arch::asm!("fence", options(noreturn)) };
 }
 
-struct MyStruct {
-    value1 : Arc<AtomicU16>,
-    value2 : Arc<AtomicU16>,
-}
+// struct MyStruct {
+//     value1 : Arc<AtomicU16>,
+//     value2 : Arc<AtomicU16>,
+// }
+
+// fn main() {
+
+//     let a: Arc<AtomicU16> = Arc::new(core::hint::black_box(AtomicU16::new(5)));
+//     let b: Arc<AtomicU16> = Arc::new(core::hint::black_box(AtomicU16::new(7)));
+
+//     if a.load(Ordering::SeqCst) + b.load(Ordering::SeqCst) != 12 {
+//         panic!("Something went wrong!");
+//     }
+
+//     let foo = Arc::new(MyStruct{value1: a.clone(), value2: b.clone()});
+
+//     if foo.value1.load(Ordering::SeqCst) + foo.value2.load(Ordering::SeqCst) != 12 {
+//         panic!("Something went wrong!");
+//     }
+// }
 
 fn main() {
 
-    let a: Arc<AtomicU16> = Arc::new(core::hint::black_box(AtomicU16::new(5)));
-    let b: Arc<AtomicU16> = Arc::new(core::hint::black_box(AtomicU16::new(7)));
+    let a: AtomicU16 = core::hint::black_box(AtomicU16::new(5));
+    let b: AtomicU16 = core::hint::black_box(AtomicU16::new(7));
 
     if a.load(Ordering::SeqCst) + b.load(Ordering::SeqCst) != 12 {
         panic!("Something went wrong!");
     }
-
-    let foo = Arc::new(MyStruct{value1: a.clone(), value2: b.clone()});
-
-    if foo.value1.load(Ordering::SeqCst) + foo.value2.load(Ordering::SeqCst) != 12 {
-        panic!("Something went wrong!");
-    }
 }
 
+static STACK_TOP: u32 = 0x0020_0400;
+    
+
 #[unsafe(no_mangle)]
-fn _start(_argc: isize, _argv: *const *const u8) -> isize {
+fn __start(_argc: isize, _argv: *const *const u8) -> isize {
     main();
-    return 0;
+
+    unsafe { core::arch::asm!(
+        "ecall",
+        in("t0") 0x00_00_00_00,
+        in("a0") 0
+    );}
+    unreachable!()
 }
 
 use core::alloc::{GlobalAlloc, Layout};
