@@ -6,3 +6,7 @@ edition = "2024"
 [dependencies]
 portable-atomic = { version = "1", default-features = false, features = ["unsafe-assume-single-core"] }
 portable-atomic-util = { version = "0.2.4", default-features = false, features = ["alloc"] }
+
+[features]
+sp1-guest = []
+risc0-guest = []
