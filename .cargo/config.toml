@@ -1,5 +1,5 @@
 [build]
-target = "riscv32im-unknown-none-elf"
+target = "riscv32imac-unknown-none-elf"
 rustflags = [
         "-C",
         "passes=lower-atomic",
@@ -10,5 +10,5 @@ rustflags = [
         "-C",
         "panic=abort",
         "--cfg",
-        "getrandom_backend=\"custom\""
+        "getrandom_backend=\"custom\"",
 ]

@@ -95,3 +95,16 @@ pub unsafe extern "C" fn sys_alloc_aligned(bytes: usize, align: usize) -> *mut u
     unsafe { HEAP_POS = heap_pos };
     ptr
 }
+
+// Assume single-threaded.
+#[cfg(all(target_arch = "riscv32", target_feature = "a"))]
+#[unsafe(no_mangle)]
+fn _critical_section_1_0_acquire() -> u32
+{
+    return 0;
+}
+
+#[cfg(all(target_arch = "riscv32", target_feature = "a"))]
+#[unsafe(no_mangle)]
+fn _critical_section_1_0_release(_: u32)
+{}
