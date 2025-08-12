@@ -108,3 +108,16 @@ fn _critical_section_1_0_acquire() -> u32
 #[unsafe(no_mangle)]
 fn _critical_section_1_0_release(_: u32)
 {}
+
+// Assume single-threaded.
+#[cfg(all(target_arch = "riscv64", target_feature = "a"))]
+#[unsafe(no_mangle)]
+fn _critical_section_1_0_acquire() -> u64
+{
+    return 0;
+}
+
+#[cfg(all(target_arch = "riscv64", target_feature = "a"))]
+#[unsafe(no_mangle)]
+fn _critical_section_1_0_release(_: u64)
+{}
