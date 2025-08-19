@@ -14,6 +14,10 @@ reth-evm-ethereum = { git = "https://github.com/paradigmxyz/reth", rev = "d8451e
 reth-stateless = { git = "https://github.com/paradigmxyz/reth", rev = "d8451e54e7267f9f1634118d6d279b2216f7e2bb", default-features = false }
 reth-chainspec = { git = "https://github.com/paradigmxyz/reth", rev = "d8451e54e7267f9f1634118d6d279b2216f7e2bb", default-features = false }
 
+[patch.crates-io]
+radium = { git = "https://github.com/ferrilab/ferrilab/", branch = "main"}
+bitvec = { git = "https://github.com/ferrilab/ferrilab/", branch = "main"}
+
 [features]
 sp1-guest = []
 risc0-guest = []
